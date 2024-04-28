@@ -117,6 +117,38 @@ class BinomialOpinion:
         
         return probability
     
+    @classmethod
+    def from_evidence(cls, r, s, base_rate=0.5, W=2):
+        """
+        Get a binomial opinion based on positive and negative evidence.
+
+        Args:
+            r (int): Positive evidence. Must be a positive integer.
+            s (int): Negative evidence. Must be a positive integer.
+            a (float): Base rate, default is 0.5.
+            W (float): Non-informative prior weight, default is 2.
+        
+        Returns:
+            BinomialOpinion: An instance of BinomialOpinion initialized from evidence.
+
+        Raises:
+            ValueError: If 'r' or 's' are not positive integers.
+        """
+        
+        # Validate that r and s are positive integers
+        if not (isinstance(r, int) and r > 0):
+            raise ValueError("Positive evidence 'r' must be a positive integer.")
+        if not (isinstance(s, int) and s > 0):
+            raise ValueError("Negative evidence 's' must be a positive integer.")
+            
+        belief = r / (r + s + W)
+        disbelief = s / (r + s + W)
+        uncertainty = W / (r + s + W)
+
+        # Create a new instance of BinomialOpinion using the calculated values
+        return cls(belief, disbelief, uncertainty, base_rate)
+
+    
     def __str__(self):
         """
         Returns a string representation of the binomial opinion.

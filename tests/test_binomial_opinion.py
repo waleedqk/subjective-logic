@@ -15,6 +15,13 @@ def test_binomial_opinion_to_from_json():
     
     compare_opinions(opinion1, opinion2)
 
+# create a test for the from_evidence method
+def test_binomial_opinion_from_evidence():
+    opinion = BinomialOpinion.from_evidence(r=2, s=1, base_rate=0.5, W=2)
+    assert opinion.belief == 0.4
+    assert opinion.disbelief == 0.2
+    assert opinion.uncertainty == 0.4
+    assert opinion.base_rate == 0.5
 
 def compare_opinions(opinion1, opinion2):
     """
