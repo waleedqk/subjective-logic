@@ -1,5 +1,5 @@
 import math
-from typing import Annotated
+from typing import Annotated, Union
 
 class BinomialOpinion:
     """
@@ -70,7 +70,7 @@ class BinomialOpinion:
             "uncertainty": self.uncertainty,
             "base_rate": self.base_rate
         }
-    
+
     @classmethod
     def from_json(cls, opinion_json):
         """
@@ -99,6 +99,24 @@ class BinomialOpinion:
             opinion_json.get("base_rate", 0.5)  # Assuming default base_rate as 0.5 if not specified
         )
 
+    def probability(self) -> Union[float, int]:
+        """
+        Calculates the expected probability of the opinion.
+        
+        Returns:
+            float | int: The probability of the binomial opinion, which could be either a float or an int.
+        
+        Raises:
+            ValueError: If the calculated probability is not between 0 and 1.
+        """
+        probability =  self.belief + self.base_rate * self.uncertainty
+
+        ## add error check that the probability is between 0 and 1
+        if not 0 <= probability <= 1:
+            raise ValueError("Probability must be between 0 and 1.")
+        
+        return probability
+    
     def __str__(self):
         """
         Returns a string representation of the binomial opinion.
