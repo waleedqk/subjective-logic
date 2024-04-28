@@ -60,6 +60,44 @@ class BinomialOpinion:
         if not (0.999 <= total <= 1.001):  # Allows a small margin for floating-point errors
             raise ValueError("The sum of belief, disbelief, and uncertainty must equal 1.")
 
+    def to_json(self):
+        """
+        Returns the opinion as a JSON object.
+        """
+        return {
+            "belief": self.belief,
+            "disbelief": self.disbelief,
+            "uncertainty": self.uncertainty,
+            "base_rate": self.base_rate
+        }
+    
+    @classmethod
+    def from_json(cls, opinion_json):
+        """
+        Creates a BinomialOpinion object from a JSON object.
+
+        Args:
+            opinion_json (dict): A JSON-like dictionary containing keys for 'belief', 'disbelief', 'uncertainty', and 'base_rate'.
+
+        Returns:
+            BinomialOpinion: An instance of BinomialOpinion initialized from the provided JSON.
+
+        Raises:
+            ValueError: If the input is not a dictionary or is missing any of the required keys.
+        """
+        # Check that the json object is valid
+        if not isinstance(opinion_json, dict):
+            raise ValueError("JSON object must be a dictionary.")
+        required_keys = ["belief", "disbelief", "uncertainty", "base_rate"]
+        if not all(key in opinion_json for key in required_keys):
+            raise ValueError("JSON object must contain the keys 'belief', 'disbelief', 'uncertainty', and 'base_rate'.")
+
+        return cls(
+            opinion_json["belief"], 
+            opinion_json["disbelief"], 
+            opinion_json["uncertainty"], 
+            opinion_json.get("base_rate", 0.5)  # Assuming default base_rate as 0.5 if not specified
+        )
 
     def __str__(self):
         """
