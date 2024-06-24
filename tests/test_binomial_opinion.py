@@ -1,6 +1,26 @@
 from subjective_logic import BinomialOpinion
 import pytest
 
+# Helper functions
+
+def validate_binomial_opinion(opinion: "BinomialOpinion"):
+    assert 0 <= opinion.belief <= 1
+    assert 0 <= opinion.disbelief <= 1
+    assert 0 <= opinion.uncertainty <= 1
+    assert 0 <= opinion.base_rate <= 1
+    assert 0.999 <= opinion.belief + opinion.disbelief + opinion.uncertainty <= 1.001
+
+def compare_binomial_opinions(opinion1, opinion2):
+    """
+    Compare two BinomialOpinion instances.
+    """
+    assert opinion1.belief == pytest.approx(opinion2.belief, rel=1e-2)
+    assert opinion1.disbelief == pytest.approx(opinion2.disbelief, rel=1e-2)
+    assert opinion1.uncertainty == pytest.approx(opinion2.uncertainty, rel=1e-2)
+    assert opinion1.base_rate == pytest.approx(opinion2.base_rate, rel=1e-2)
+
+# Unit Tests
+
 def test_binomial_opinion_initialization():
     opinion = BinomialOpinion(belief=0.5, disbelief=0.3, uncertainty=0.2, base_rate=0.5)
     assert opinion.belief == pytest.approx(0.5)
@@ -60,19 +80,3 @@ def test_binomial_opinion_average_fusion():
     assert average_fused_opinion.disbelief == pytest.approx(0.4445, rel=1e-2)
     assert average_fused_opinion.uncertainty == pytest.approx(0.22, rel=1e-2)
     assert average_fused_opinion.base_rate == pytest.approx(0.55, rel=1e-2)
-
-def validate_binomial_opinion(opinion: "BinomialOpinion"):
-    assert 0 <= opinion.belief <= 1
-    assert 0 <= opinion.disbelief <= 1
-    assert 0 <= opinion.uncertainty <= 1
-    assert 0 <= opinion.base_rate <= 1
-    assert 0.999 <= opinion.belief + opinion.disbelief + opinion.uncertainty <= 1.001
-
-def compare_binomial_opinions(opinion1, opinion2):
-    """
-    Compare two BinomialOpinion instances.
-    """
-    assert opinion1.belief == pytest.approx(opinion2.belief, rel=1e-2)
-    assert opinion1.disbelief == pytest.approx(opinion2.disbelief, rel=1e-2)
-    assert opinion1.uncertainty == pytest.approx(opinion2.uncertainty, rel=1e-2)
-    assert opinion1.base_rate == pytest.approx(opinion2.base_rate, rel=1e-2)

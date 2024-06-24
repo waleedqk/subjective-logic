@@ -28,6 +28,8 @@ class BinomialOpinion:
         self._uncertainty = None
         self._base_rate = None
 
+        self.float_precision = 6
+
         self.set_param('belief', belief)
         self.set_param('disbelief', disbelief)
         self.set_param('uncertainty', uncertainty)
@@ -65,12 +67,12 @@ class BinomialOpinion:
         Raises an exception if the validation fails.
         """
         total = self._belief + self._disbelief + self._uncertainty
-        if not (Decimal("0.999999") <= total <= Decimal("1.000001")):  # Allows a small margin for floating-point errors
-            raise ValueError("The sum of belief, disbelief, and uncertainty must equal 1.")
+        if not (Decimal("0.99999") <= total <= Decimal("1.00001")):  # Allows a small margin for floating-point errors
+            raise ValueError(f"The sum of belief({self.belief}), disbelief({self.disbelief}), and uncertainty({self.uncertainty}) must equal 1 != {total}.")
 
     @property
     def belief(self):
-        return float(self._belief)
+        return round(float(self._belief), self.float_precision)
 
     @belief.setter
     def belief(self, value):
@@ -78,7 +80,7 @@ class BinomialOpinion:
 
     @property
     def disbelief(self):
-        return float(self._disbelief)
+        return  round(float(self._disbelief), self.float_precision)
 
     @disbelief.setter
     def disbelief(self, value):
@@ -86,7 +88,7 @@ class BinomialOpinion:
 
     @property
     def uncertainty(self):
-        return float(self._uncertainty)
+        return  round(float(self._uncertainty), self.float_precision)
 
     @uncertainty.setter
     def uncertainty(self, value):
@@ -94,7 +96,7 @@ class BinomialOpinion:
 
     @property
     def base_rate(self):
-        return float(self._base_rate)
+        return  round(float(self._base_rate), self.float_precision)
 
     @base_rate.setter
     def base_rate(self, value):
