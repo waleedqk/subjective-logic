@@ -176,18 +176,19 @@ class BinomialOpinion:
             BinomialOpinion: An instance of BinomialOpinion initialized from evidence.
 
         Raises:
-            ValueError: If 'r' or 's' are not positive integers.
+            ValueError: If 'r' or 's' are non-negative integer.
         """
         
         # Validate that r and s are positive integers
-        if not (isinstance(r, int) and r > 0):
-            raise ValueError("Positive evidence 'r' must be a positive integer.")
-        if not (isinstance(s, int) and s > 0):
-            raise ValueError("Negative evidence 's' must be a positive integer.")
+        if not isinstance(r, int) or r < 0:
+            raise ValueError("Positive evidence 'r' must be a non-negative integer.")
+        if not isinstance(s, int) or s < 0:
+            raise ValueError("Negative evidence 's' must be a non-negative integer.")
             
-        belief = Decimal(r) / (Decimal(r) + Decimal(s) + Decimal(W))
-        disbelief = Decimal(s) / (Decimal(r) + Decimal(s) + Decimal(W))
-        uncertainty = Decimal(W) / (Decimal(r) + Decimal(s) + Decimal(W))
+        denominator = Decimal(r) + Decimal(s) + Decimal(W)
+        belief = Decimal(r) / denominator
+        disbelief = Decimal(s) / denominator
+        uncertainty = Decimal(W) / denominator
 
         # Create a new instance of BinomialOpinion using the calculated values
         return cls(float(belief), float(disbelief), float(uncertainty), base_rate)
